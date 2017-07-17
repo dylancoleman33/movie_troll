@@ -4,6 +4,11 @@ const movieInput = $('#movie-search');
 const searchButton = $('#search-button');
 var thePoster = $('#poster');
 var caption = $('#caption');
+var textArea = $('#discussion');
+var saveButton = $('#save-button');
+
+textArea.hide();
+saveButton.hide();
 
 searchButton.on('click', function(){
   console.log('clicked')
@@ -19,4 +24,10 @@ searchButton.on('click', function(){
     caption.append(overview)
   }
   $.ajax(requestSettings).done(callback)
+  textArea.show();
+  saveButton.show();
 });
+
+saveButton.on('click',function(){
+  console.log('clicked save butttttton')
+})
