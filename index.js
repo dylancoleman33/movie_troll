@@ -49,15 +49,17 @@ passport.deserializeUser(User.deserializeUser());
 // })
 
 //  ROUTES=========================
+//  route to home - all posts.
 app.get('/',function(req,res){
   res.render('home');
 });
 
+
+// for use to prove auth works.
 app.get('/secret', isLoggedIn, function(req, res){
   res.render('secret')
 });
-
-// AUTH ROUTEs=================
+// AUTH ROUTES=================
 // render SIGN UP form
 app.get('/signup', function(req, res){
   res.render('signup');
