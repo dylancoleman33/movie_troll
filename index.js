@@ -51,7 +51,7 @@ app.get('/search/:searchTerm', (req, res) => {
   var searchTerm = req.params.searchTerm;
   var initUrl = 'https://api.themoviedb.org/3/search/movie'
   var apiKey = process.env.MDB_API_KEY
-  var apiUrl = `${initUrl}?apikey=${apiKey}&language=en-US&query=${searchTerm}&page=1&include_adult=false`
+  var apiUrl = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MDB_API_KEY}&language=en-US&query=${searchTerm}&page=1&include_adult=false`
 
   request.get(apiUrl, (err, response, body) => {
     console.log(body)
@@ -66,7 +66,7 @@ app.get('/',function(req,res){
 });
 
 
-// for use to prove auth works.
+// use to prove auth works.
 app.get('/secret', isLoggedIn, function(req, res){
   console.log(req.user)
   res.render('secret')
