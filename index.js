@@ -37,7 +37,11 @@ app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-
+//  make the current user available globally
+app.use(function (req, res, next) {
+   res.locals.currentUser = req.user;
+   next()
+ });
 //console.log(process.env.MDB_API_KEY)
 
 //  API Search===============
@@ -57,6 +61,7 @@ app.get('/',function(req,res){
 
 // for use to prove auth works.
 app.get('/secret', isLoggedIn, function(req, res){
+  console.log(req.user)
   res.render('secret')
 });
 // AUTH ROUTES=================
