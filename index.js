@@ -7,6 +7,7 @@ const
   passport = require('passport'),
   LocalStrategy = require('passport-local'),
   passportLocalMongoose = require('passport-local-mongoose'),
+  request = require('request'),
   User = require('./models/user')
 const
   PORT = 3000,
@@ -42,15 +43,21 @@ app.use(function (req, res, next) {
    res.locals.currentUser = req.user;
    next()
  });
-//console.log(process.env.MDB_API_KEY)
+console.log(process.env.MDB_API_KEY)
 
-//  API Search===============
-// app.get('/search/:searchTerm', (req, res) => {
-//   var searchTerm = req.params.searchTerm;
-//   var apiUrl = 'https://api.themoviedb.org/3/movie/550?api_key='
-//   var apiKey = process.env.MDB_API_KEY
-//   var requestUrl = `${apiUrl}${apiKey}`
-// })
+ // API Search===============
+
+app.get('/search/:searchTerm', (req, res) => {
+  var searchTerm = req.params.searchTerm;
+  var initUrl = 'https://api.themoviedb.org/3/search/movie'
+  var apiKey = process.env.MDB_API_KEY
+  var apiUrl = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MDB_API_KEY}&language=en-US&query=${searchTerm}&page=1&include_adult=false`
+
+  request.get(apiUrl, (err, response, body) => {
+    console.log(body)
+    res.json(JSON.parse(body))
+  });
+});
 
 //  ROUTES=========================
 //  route to home - all posts.
@@ -59,7 +66,7 @@ app.get('/',function(req,res){
 });
 
 
-// for use to prove auth works.
+// use to prove auth works.
 app.get('/secret', isLoggedIn, function(req, res){
   console.log(req.user)
   res.render('secret')
