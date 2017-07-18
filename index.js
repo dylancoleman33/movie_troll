@@ -45,7 +45,7 @@ passport.deserializeUser(User.deserializeUser());
 //  make the current user available globally
 app.use(function (req, res, next) {
    res.locals.currentUser = req.user;
-   console.log(req.user)
+  //  console.log(req.user)
    next()
  });
 // console.log(process.env.MDB_API_KEY)

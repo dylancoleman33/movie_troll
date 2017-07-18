@@ -1,11 +1,10 @@
 <% include partials/header %>
 <div style="text-align:center" class="container">
-  <h1>Show One Movie</h1>
-
   <h1><%= post.title %></h1>
   <h5><%= post.year %></h5>
   <img src="<%= post.image %>">
   <p><%= post.plot %></p>
-
-  <button class="btn btn-primary"><a href="/movies/<%= post.id %>/edit"></a>Edit This</button>
+<a href="/movies/<%= post.id %>/edit">
+  <button class="btn btn-primary">Edit This</button>
+</a>
 </div>
