@@ -1,6 +1,23 @@
 #home-banner{
   text-align: center;
 }
+<<<<<<< HEAD
+
+#greeting {
+  text-align: center;
+  /*border: 1px solid black;*/
+  /*height: 400px;
+  width: 400px;
+  background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRVYFBUgg5Ey7fCM2o-wxUsd_-27DR0009DUJR3BCnwAvF1Yhj');
+  background-repeat:no-repeat;
+  background-size: 100%;
+  opacity: .6;*/
+  color: rgb(255,120,120);
+  font-family: 'Amatic SC', cursive;
+
+}
+/Users/BRAD/code/newWdi/project_three/movie_troll/public/assets/
+=======
 .username{
   height: 26px;
 }
@@ -13,3 +30,4 @@
 #poster{
   background-color: grey;
 }
+>>>>>>> f4417822e2742e02a24791277a83b21f46148d39
