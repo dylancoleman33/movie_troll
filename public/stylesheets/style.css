@@ -1,6 +1,7 @@
 #home-banner{
   text-align: center;
 }
+<<<<<<< HEAD
 
 #greeting {
   text-align: center;
@@ -16,3 +17,17 @@
 
 }
 /Users/BRAD/code/newWdi/project_three/movie_troll/public/assets/
+=======
+.username{
+  height: 26px;
+}
+.password{
+  height: 26px;
+}
+#caption{
+  float: right;
+}
+#poster{
+  background-color: grey;
+}
+>>>>>>> f4417822e2742e02a24791277a83b21f46148d39
