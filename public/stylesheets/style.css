@@ -1,3 +1,15 @@
 #home-banner{
   text-align: center;
 }
+.username{
+  height: 26px;
+}
+.password{
+  height: 26px;
+}
+#caption{
+  float: right;
+}
+#poster{
+  background-color: grey;
+}
