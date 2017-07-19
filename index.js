@@ -12,8 +12,7 @@ const
   request = require('request'),
   User = require('./models/user'),
   Post = require('./models/post'),
-  Comment = require('./models/comment')
-const
+  Comment = require('./models/comments'),
   PORT = 3000,
   app = express()
 
@@ -150,39 +149,55 @@ app.delete('/movies/:id', (req, res) => {
 
 
 // ========= Comments
-app.get('/movies/:id/comments/new', function(req, res){
-  Post.findById(req.params.id, function(err, post){
-    if(err){
-      console.log(err)
+
+//route for posting comments
+app.post('/movies/:id/comments', (req, res) => {
+  var id = req.params.id
+  Post.findById(req.params.id, (err, post) => {
+    if (err) return err;
+
+    console.log();
+    console.log("++++++++++++++++++++++");
+    // var newComment = {text:text}
+    var newCom = new Comment(req.body)
+    newCom._movieid = post._id
+    console.log(newCom);
+    console.log("++++++++++++++++++++++");
+    newCom.save((err, put) => {
+      if (err) {
+        console.log(err)
       } else {
-        res.render('comments/new', {post: post});
+        post.comments.push(newCom)
+        post.save()
+        res.redirect('/movies/'+id)
       }
-  });
-});
+    })
+  })
+})
 
-// app.post('/movies/:id/comments', (req, res)=>{
-//   Post.findById(req.params.id, function(err, post){
-//     if(err) {
-//       console.log(err)
-//       res.redirect('/movies')
-//     } else{
-//       console.log(req.body.comment)
-//       Comment.create(req.body.comment, function(err,comment){
-//         if(err) {
-//           console.log(err)
-//         } else {
-//           comment.commentor.id = req.user._id;
-//           comment.commentor.username = req.user.username;
-//           post.comments.push(comment);
-//           post.save()
-//           res.redirect('/movies/' + post._id)
-//         }
-//       })
-//     }
-//   })
-// })
+app.post('/movies/:id/comments', (req, res) => {
+   var id = req.params.id
+   Post.findById(req.params.id, (err, post) => {
+     if (err) return err;
 
-
+     console.log();
+     console.log("++++++++++++++++++++++");
+     // var newComment = {text:text}
+     var newCom = new Comment(req.body)
+     newCom._movieid = post._id
+     console.log(newCom);
+     console.log("++++++++++++++++++++++");
+     newCom.save((err, put) => {
+       if (err) {
+         console.log(err)
+       } else {
+         post.comments.push(newCom)
+         post.save()
+        res.redirect('/movies/'+id)
+      }
+   })
+   })
+ })
 
 
 // use to prove auth works.
@@ -218,7 +233,7 @@ app.get("/login", function(req, res){
 
 // Create a SESSION
 app.post('/login', passport.authenticate("local", {
-  successRedirect: "/secret",
+  successRedirect: "/movies",
   failureRedirect: "/login"
 }), function(req, res){
 });
@@ -238,30 +253,7 @@ function isLoggedIn(req,res,next){
   res.redirect('/login')
 }
 //comments
-//route for posting comments
-app.post('/movies/:id/comments', (req, res) => {
-  var id = req.params.id
-  Post.findById(req.params.id, (err, post) => {
-    if (err) return err;
 
-    console.log();
-    console.log("++++++++++++++++++++++");
-    // var newComment = {text:text}
-    var newCom = new Comment(req.body)
-    newCom._movieid = post._id
-    console.log(newCom);
-    console.log("++++++++++++++++++++++");
-    newCom.save((err, put) => {
-      if (err) {
-        console.log(err)
-      } else {
-        post.comments.push(newCom)
-        post.save()
-        res.redirect('/movies/'+id)
-      }
-    })
-  })
-})
 
 app.listen(PORT, function(err){
   console.log(err || `Server is listening on port ${PORT}`)
