@@ -49,7 +49,7 @@ saveButton.on('click',function(e){
     contentType: "application/json"
   }
   function callback(d){
-    // console.log(d)
+
   }
   $.ajax(requestSettings).done(callback)
 })

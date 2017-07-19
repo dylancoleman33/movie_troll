@@ -81,18 +81,19 @@ app.get('/movies', (req, res) => {
   });
 });
 
-app.post('/movies', isLoggedIn, (req, res) =>{
+app.post('/movies', (req, res) =>{
   console.log('req.body is:',req.body)
   Post.create(req.body, (err, newPost) => {
     if(err) {
-      console.log('err',err)
+      return console.log('err', err)
     } else {
+      res.render('movies/movies')
     }
+
   })
-  res.redirect('/movies')
 });
 
-app.get('/movies/new', isLoggedIn, (req, res) => {
+app.get('/movies/new', (req, res) => {
   res.render('movies/new')
 });
 
