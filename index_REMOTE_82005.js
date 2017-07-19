@@ -9,10 +9,12 @@ const
   passport = require('passport'),
   LocalStrategy = require('passport-local'),
   passportLocalMongoose = require('passport-local-mongoose'),
+  fs = require('fs'),
+  multer = require('multer'),
   request = require('request'),
   User = require('./models/user'),
   Post = require('./models/post'),
-  Comment = require('./models/comment')
+  Comment = require('./models/comments')
 const
   PORT = 3000,
   app = express()
@@ -68,7 +70,7 @@ app.get('/search/:searchTerm', (req, res) => {
 //  ROUTES=========================
   // greeting page
 app.get('/',function(req,res){
-    res.render('movies/home');
+    res.render('home');
 });
 
 //  route to home - all posts.
@@ -77,7 +79,7 @@ app.get('/movies', (req, res) => {
     if(err){
       console.log(err)
     } else {
-      res.render('movies/movies', {posts: allPosts})
+      res.render('movies', {posts: allPosts})
     }
   });
 });
@@ -98,16 +100,16 @@ app.post('/movies', isLoggedIn, (req, res) =>{
 });
 
 app.get('/movies/new', isLoggedIn, (req, res) => {
-  res.render('movies/new')
+  res.render('new')
 });
 
 app.get('/movies/:id', (req, res) => {
-  Post.findById(req.params.id).populate("comments").exec(function(err, foundPost){
+  Post.findById(req.params.id, (err, foundPost) => {
     if(err) {
       console.log(err)
     } else {
-      // console.log(foundPost)
-      res.render('movies/show', {post: foundPost});
+      console.log(foundPost)
+      res.render('show', {post: foundPost});
     }
   });
 });
@@ -117,79 +119,22 @@ app.get('/movies/:id/edit', (req,res) => {
     if(err){
       console.log(err)
     } else {
-      res.render('movies/edit', {post: foundPost});
+      res.render('edit', {post: foundPost});
     }
   });
 });
 
-app.put('/movies/:id', function(req, res) {
-  // Post.findByIdAndUpdate(req.params.id, req.body.post, function(err, updatedPost){
-  //   if(err){
-  //     console.log(err)
-  //     res.redirect('/movies')
-  //   } else {
-  //     res.redirect('/movies/' + req.params.id)
-  //   }
-  // });
-  res.send('edit post')
+app.put('/movies/:id', (req, res) => {
+  res.send('update route')
 });
-
-app.delete('/movies/:id', (req, res) => {
-  Post.findByIdAndRemove(req.params.id, function(err){
-    if(err){
-      console.log(err)
-      res.redirect('/movies')
-    } else {
-      res.redirect('/movies')
-    }
-  });
-});
-
-
-
-
-
-// ========= Comments
-app.get('/movies/:id/comments/new', function(req, res){
-  Post.findById(req.params.id, function(err, post){
-    if(err){
-      console.log(err)
-      } else {
-        res.render('comments/new', {post: post});
-      }
-  });
-});
-
-// app.post('/movies/:id/comments', (req, res)=>{
-//   Post.findById(req.params.id, function(err, post){
-//     if(err) {
-//       console.log(err)
-//       res.redirect('/movies')
-//     } else{
-//       console.log(req.body.comment)
-//       Comment.create(req.body.comment, function(err,comment){
-//         if(err) {
-//           console.log(err)
-//         } else {
-//           comment.commentor.id = req.user._id;
-//           comment.commentor.username = req.user.username;
-//           post.comments.push(comment);
-//           post.save()
-//           res.redirect('/movies/' + post._id)
-//         }
-//       })
-//     }
-//   })
-// })
-
 
 
 
 // use to prove auth works.
-// app.get('/secret', isLoggedIn, function(req, res){
-//   console.log(req.user)
-//   res.render('secret')
-// });
+app.get('/secret', isLoggedIn, function(req, res){
+  console.log(req.user)
+  res.render('secret')
+});
 // AUTH ROUTES=================
 // render SIGN UP form
 app.get('/signup', function(req, res){
@@ -206,7 +151,7 @@ app.post('/signup', function(req, res){
       return res.render('signup');
     }
     passport.authenticate("local")(req,res,function(){
-      res.redirect('/movies');
+      res.redirect('/secret');
     });
   });
 });

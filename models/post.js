@@ -6,7 +6,7 @@ const postSchema = new mongoose.Schema({
     image: String,
     plot: String,
     creator: {
-      id: {
+      _id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
       },
@@ -19,5 +19,9 @@ const postSchema = new mongoose.Schema({
         }
     ]
 });
+
+postSchema.pre("findOne", function() {
+  this.populate("comments")
+})
 
 module.exports = mongoose.model("Post",postSchema)
