@@ -8,11 +8,10 @@ const
   passport = require('passport'),
   LocalStrategy = require('passport-local'),
   passportLocalMongoose = require('passport-local-mongoose'),
-  fs = require('fs'),
-  multer = require('multer'),
   request = require('request'),
   User = require('./models/user'),
-  Post = require('./models/post')
+  Post = require('./models/post'),
+  Comment = require('./models/comment')
 const
   PORT = 3000,
   app = express()
@@ -67,7 +66,7 @@ app.get('/search/:searchTerm', (req, res) => {
 //  ROUTES=========================
   // greeting page
 app.get('/',function(req,res){
-    res.render('home');
+    res.render('s/home');
 });
 
 //  route to home - all posts.
@@ -97,16 +96,16 @@ app.post('/movies', isLoggedIn, (req, res) =>{
 });
 
 app.get('/movies/new', isLoggedIn, (req, res) => {
-  res.render('new')
+  res.render('movies/new')
 });
 
 app.get('/movies/:id', (req, res) => {
-  Post.findById(req.params.id, (err, foundPost) => {
+  Post.findById(req.params.id).populate("comments").exec(function(err, foundPost){
     if(err) {
       console.log(err)
     } else {
-      console.log(foundPost)
-      res.render('show', {post: foundPost});
+      // console.log(foundPost)
+      res.render('movies/show', {post: foundPost});
     }
   });
 });
@@ -116,17 +115,41 @@ app.get('/movies/:id/edit', (req,res) => {
     if(err){
       console.log(err)
     } else {
-      res.render('edit', {post: foundPost});
+      res.render('movies/edit', {post: foundPost});
     }
   });
 });
 
 app.put('/movies/:id', (req, res) => {
-  res.send('update route')
+  Post.findByIdAndUpdate(req.params.id, req.body.post, function(err, updatedPost){
+    if(err){
+      console.log(err)
+      res.redirect('/movies')
+    } else {
+      res.redirect('/movies/' + req.params.id)
+    }
+  });
+});
+
+app.delete('/movies/:id', (req, res) => {
+  Post.findByIdAndRemove(req.params.id, function(err){
+    if(err){
+      console.log(err)
+      res.redirect('/movies')
+    } else {
+      res.redirect('/movies')
+    }
+  });
 });
 
 
 
+
+
+// ========= Comments
+app.get('/movies/:id/comments/new', (req, res)=>{
+  res.render('comments/new')
+})
 // use to prove auth works.
 app.get('/secret', isLoggedIn, function(req, res){
   console.log(req.user)
