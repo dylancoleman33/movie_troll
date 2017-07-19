@@ -82,18 +82,19 @@ app.get('/movies', (req, res) => {
 });
 
 app.post('/movies', isLoggedIn, (req, res) =>{
-  var title = req.body.title
-  var year = req.body.year
-  var image = req.body.image
-  var plot = req.body.plot
-  var newPost = {title:title, year:year, image: image, plot: plot}
-  Post.create(newPost, function(err, newPosting){
-    if(err){
-      console.log(err)
-    } else {
-      res.redirect('/movies')
-    }
-  });
+  // var title = req.body.title
+  // var year = req.body.year
+  // var image = req.body.image
+  // var plot = req.body.plot
+  // var newPost = {title:title, year:year, image: image, plot: plot}
+  // Post.create(newPost, function(err, newPosting){
+  //   if(err){
+  //     console.log(err)
+  //   } else {
+  //     res.redirect('/movies')
+  //   }
+  // });
+  res.render('movies/search')
 });
 
 app.get('/movies/new', isLoggedIn, (req, res) => {
@@ -195,16 +196,9 @@ app.post('/movies/:id/comments', (req, res) => {
          post.save()
         res.redirect('/movies/'+id)
       }
-   })
-   })
- })
-
-
-// use to prove auth works.
-// app.get('/secret', isLoggedIn, function(req, res){
-//   console.log(req.user)
-//   res.render('secret')
-// });
+   });
+  });
+ });
 // AUTH ROUTES=================
 // render SIGN UP form
 app.get('/signup', function(req, res){
@@ -244,7 +238,6 @@ app.get('/logout', function(req, res){
   res.redirect('/')
 })
 
-
 // middleware to check status
 function isLoggedIn(req,res,next){
   if(req.isAuthenticated()){
@@ -252,7 +245,6 @@ function isLoggedIn(req,res,next){
   }
   res.redirect('/login')
 }
-//comments
 
 
 app.listen(PORT, function(err){
