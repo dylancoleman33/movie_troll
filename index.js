@@ -1,6 +1,7 @@
 const
   express = require('express'),
   bodyParser = require('body-parser'),
+  cookieParser = require('cookie-parser'),
   mongoose = require('mongoose'),
   dotenv = require('dotenv').load(),
   morgan = require('morgan'),
@@ -12,7 +13,8 @@ const
   multer = require('multer'),
   request = require('request'),
   User = require('./models/user'),
-  Post = require('./models/post')
+  Post = require('./models/post'),
+  Comment = require('./models/comments')
 const
   PORT = 3000,
   app = express()
@@ -27,7 +29,8 @@ app.use(express.static(__dirname + '/public'))
 app.set('view engine', 'ejs')
 // parse to deal with nested objects
 app.use(bodyParser.urlencoded({extended:true}));
-
+app.use(bodyParser.json())
+app.use(cookieParser())
 // require and use session in one swoop,
 // secret required to encode/decode session data
 app.use(require("express-session")({
@@ -179,8 +182,31 @@ function isLoggedIn(req,res,next){
   }
   res.redirect('/login')
 }
+//comments
+//route for posting comments
+app.post('/movies/:id/comments', (req, res) => {
+  var id = req.params.id
+  Post.findById(req.params.id, (err, post) => {
+    if (err) return err;
 
-
+    console.log();
+    console.log("++++++++++++++++++++++");
+    // var newComment = {text:text}
+    var newCom = new Comment(req.body)
+    newCom._movieid = post._id
+    console.log(newCom);
+    console.log("++++++++++++++++++++++");
+    newCom.save((err, put) => {
+      if (err) {
+        console.log(err)
+      } else {
+        post.comments.push(newCom)
+        post.save()
+        res.redirect('/movies/'+id)
+      }
+    })
+  })
+})
 
 app.listen(PORT, function(err){
   console.log(err || `Server is listening on port ${PORT}`)
