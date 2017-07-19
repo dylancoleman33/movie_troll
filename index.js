@@ -66,7 +66,7 @@ app.get('/search/:searchTerm', (req, res) => {
 //  ROUTES=========================
   // greeting page
 app.get('/',function(req,res){
-    res.render('s/home');
+    res.render('movies/home');
 });
 
 //  route to home - all posts.
@@ -75,7 +75,7 @@ app.get('/movies', (req, res) => {
     if(err){
       console.log(err)
     } else {
-      res.render('movies', {posts: allPosts})
+      res.render('movies/movies', {posts: allPosts})
     }
   });
 });
@@ -120,15 +120,16 @@ app.get('/movies/:id/edit', (req,res) => {
   });
 });
 
-app.put('/movies/:id', (req, res) => {
-  Post.findByIdAndUpdate(req.params.id, req.body.post, function(err, updatedPost){
-    if(err){
-      console.log(err)
-      res.redirect('/movies')
-    } else {
-      res.redirect('/movies/' + req.params.id)
-    }
-  });
+app.put('/movies/:id', function(req, res) {
+  // Post.findByIdAndUpdate(req.params.id, req.body.post, function(err, updatedPost){
+  //   if(err){
+  //     console.log(err)
+  //     res.redirect('/movies')
+  //   } else {
+  //     res.redirect('/movies/' + req.params.id)
+  //   }
+  // });
+  res.send('edit post')
 });
 
 app.delete('/movies/:id', (req, res) => {
@@ -147,14 +148,46 @@ app.delete('/movies/:id', (req, res) => {
 
 
 // ========= Comments
-app.get('/movies/:id/comments/new', (req, res)=>{
-  res.render('comments/new')
-})
-// use to prove auth works.
-app.get('/secret', isLoggedIn, function(req, res){
-  console.log(req.user)
-  res.render('secret')
+app.get('/movies/:id/comments/new', function(req, res){
+  Post.findById(req.params.id, function(err, post){
+    if(err){
+      console.log(err)
+      } else {
+        res.render('comments/new', {post: post});
+      }
+  });
 });
+
+// app.post('/movies/:id/comments', (req, res)=>{
+//   Post.findById(req.params.id, function(err, post){
+//     if(err) {
+//       console.log(err)
+//       res.redirect('/movies')
+//     } else{
+//       console.log(req.body.comment)
+//       Comment.create(req.body.comment, function(err,comment){
+//         if(err) {
+//           console.log(err)
+//         } else {
+//           comment.commentor.id = req.user._id;
+//           comment.commentor.username = req.user.username;
+//           post.comments.push(comment);
+//           post.save()
+//           res.redirect('/movies/' + post._id)
+//         }
+//       })
+//     }
+//   })
+// })
+
+
+
+
+// use to prove auth works.
+// app.get('/secret', isLoggedIn, function(req, res){
+//   console.log(req.user)
+//   res.render('secret')
+// });
 // AUTH ROUTES=================
 // render SIGN UP form
 app.get('/signup', function(req, res){
@@ -171,7 +204,7 @@ app.post('/signup', function(req, res){
       return res.render('signup');
     }
     passport.authenticate("local")(req,res,function(){
-      res.redirect('/secret');
+      res.redirect('/movies');
     });
   });
 });
